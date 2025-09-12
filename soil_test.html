@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8">
+  <title>Soil Testing - Voice Farm Mate</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4fff4;
+      text-align: center;
+    }
+    form {
+      margin-top: 30px;
+      background: #ffffff;
+      display: inline-block;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+    }
+    input[type="text"] {
+      padding: 8px;
+      margin: 5px;
+      width: 200px;
+    }
+    input[type="button"] {
+      padding: 10px 20px;
+      margin-top: 10px;
+      background: green;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    input[type="button"]:hover {
+      background: darkgreen;
+    }
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+      color: #2e8b57;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌱 Soil Testing 🌱</h1>
+  <p>Enter your soil details to get recommendations.</p>
+
+  <form id="soilForm">
+    <input type="text" id="ph" placeholder="pH Level"><br>
+    <input type="text" id="n" placeholder="Nitrogen (N)"><br>
+    <input type="text" id="p" placeholder="Phosphorus (P)"><br>
+    <input type="text" id="k" placeholder="Potassium (K)"><br>
+    <input type="button" value="Check Recommendation" onclick="checkSoil()">
+  </form>
+
+  <div id="result"></div>
+
+  <script>
+    function checkSoil() {
+      let ph = document.getElementById("ph").value;
+      let n = document.getElementById("n").value;
+      let p = document.getElementById("p").value;
+      let k = document.getElementById("k").value;
+      let result = "";
+
+      if(ph >= 6 && ph <= 7 && n >= 50 && p >= 40 && k >= 40){
+        result = "✅ Soil is suitable for Rice, Wheat, and Maize.";
+      } else {
+        result = "⚠ Soil is weak. Add Organic Fertilizer and Compost.";
+      }
+      document.getElementById("result").innerHTML = result;
+    }
+  </script>
+</body>
+</html>

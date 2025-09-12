@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8">
+  <title>Voice Assistant - Voice Farm Mate</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f4fff4;
+    }
+    button {
+      padding: 15px 30px;
+      margin-top: 20px;
+      font-size: 16px;
+      background-color: green;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: darkgreen;
+    }
+    #output {
+      margin-top: 30px;
+      font-weight: bold;
+      color: #2e8b57;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎤 Voice Assistant 🌱</h1>
+  <p>Click the button and speak your query about crops.</p>
+
+  <button onclick="startRecognition()">🎙 Start Speaking</button>
+
+  <div id="output"></div>
+
+  <script>
+    function startRecognition() {
+      const output = document.getElementById("output");
+
+      // Check browser support
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if(!SpeechRecognition){
+        output.innerHTML = "⚠ Your browser does not support Speech Recognition!";
+        return;
+      }
+
+      const recognition = new SpeechRecognition();
+      recognition.lang = "ta-IN"; // Tamil language
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      recognition.start();
+      output.innerHTML = "🎧 Listening... Speak now!";
+
+      recognition.onresult = function(event){
+        let speechResult = event.results[0][0].transcript;
+        output.innerHTML = "🗣 You said: " + speechResult + "<br>";
+
+        // Simple demo response
+        if(speechResult.includes("soil") || speechResult.includes("நிலம்")){
+          output.innerHTML += "✅ Suggestion: Check your soil pH and nutrients.";
+        } else if(speechResult.includes("pest") || speechResult.includes("பூச்சி")){
+          output.innerHTML += "✅ Suggestion: Monitor for pests regularly.";
+        } else {
+          output.innerHTML += "✅ Suggestion: Keep farming smart!";
+        }
+      }
+
+      recognition.onerror = function(event){
+        output.innerHTML = "❌ Error occurred: " + event.error;
+      }
+    }
+  </script>
+</body>
+</html>
