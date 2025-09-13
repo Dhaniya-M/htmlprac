@@ -28,53 +28,71 @@
       color: #2e8b57;
       font-size: 18px;
     }
+    nav a i {
+      margin-right: 8px;
+    }
+    nav a i.fa-house { color: #006400; }
+    nav a i.fa-seedling { color: #228B22; }
+    nav a i.fa-bug { color: #FF8C00; }
+    nav a i.fa-microphone { color: #1E90FF; }
   </style>
 </head>
 <body>
   <h1>🎤 Voice Assistant 🌱</h1>
-  <p>Click the button and speak your query about crops.</p>
+  <nav>
+    <a href="index.html"><i class="fa-solid fa-house"></i>Home</a>
+    <a href="soil_test.html"><i class="fa-solid fa-seedling"></i>Soil Testing</a>
+    <a href="pest_detect.html"><i class="fa-solid fa-bug"></i>Pest Detection</a>
+    <a href="voice_assist.html"><i class="fa-solid fa-microphone"></i>Voice Assistant</a>
+  </nav>
+  <p>Speak about crops, soil or pest and click Start Speaking.</p>
 
-  <button onclick="startRecognition()">🎙 Start Speaking</button>
-
+  <button onclick="startListening()">🎙 Start Speaking</button>
   <div id="output"></div>
 
-  <script>
-    function startRecognition() {
-      const output = document.getElementById("output");
+  
+   
 
-      // Check browser support
+        <script>
+    function startListening() {
+      const output = document.getElementById("output");
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if(!SpeechRecognition){
-        output.innerHTML = "⚠ Your browser does not support Speech Recognition!";
+      if (!SpeechRecognition) {
+        output.innerHTML = "⚠ Mic not supported in this browser!";
         return;
       }
-
       const recognition = new SpeechRecognition();
-      recognition.lang = "ta-IN"; // Tamil language
+      recognition.lang = "ta-IN";
       recognition.interimResults = false;
       recognition.maxAlternatives = 1;
 
+      output.innerHTML = "🎙 Listening... Speak now!";
       recognition.start();
-      output.innerHTML = "🎧 Listening... Speak now!";
 
-      recognition.onresult = function(event){
-        let speechResult = event.results[0][0].transcript;
-        output.innerHTML = "🗣 You said: " + speechResult + "<br>";
+      recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        output.innerHTML = `You said: <b>${transcript}</b><br>⏳ Getting answer...`;
 
-        // Simple demo response
-        if(speechResult.includes("soil") || speechResult.includes("நிலம்")){
-          output.innerHTML += "✅ Suggestion: Check your soil pH and nutrients.";
-        } else if(speechResult.includes("pest") || speechResult.includes("பூச்சி")){
-          output.innerHTML += "✅ Suggestion: Monitor for pests regularly.";
-        } else {
-          output.innerHTML += "✅ Suggestion: Keep farming smart!";
-        }
-      }
+        // Backend API call
+        fetch("http://localhost:5000/agri-chatbot", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ query: transcript })
+        })
+        .then(res => res.json())
+        .then(data => {
+          output.innerHTML += "<br>" + data.reply;
+        })
+        .catch(() => {
+          output.innerHTML += "<br>⚠ Backend not connected!";
+        });
+      };
 
-      recognition.onerror = function(event){
-        output.innerHTML = "❌ Error occurred: " + event.error;
-      }
+      recognition.onerror = function(event) {
+        output.innerHTML = "⚠ Mic error: " + event.error;
+      };
     }
   </script>
+  
 </body>
 </html>

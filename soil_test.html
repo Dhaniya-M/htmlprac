@@ -39,10 +39,23 @@
       font-weight: bold;
       color: #2e8b57;
     }
+        nav a i {
+      margin-right: 8px;
+    }
+    nav a i.fa-house { color: #006400; }         /* Home - dark green */
+    nav a i.fa-seedling { color: #228B22; }      /* Soil - green */
+    nav a i.fa-bug { color: #FF8C00; }           /* Pest - orange */
+    nav a i.fa-microphone { color: #1E90FF; }    /* Voice - blue */
   </style>
 </head>
 <body>
   <h1>🌱 Soil Testing 🌱</h1>
+  <nav>
+  <a href="index.html"><i class="fa-solid fa-house"></i>Home</a>
+  <a href="soil_test.html"><i class="fa-solid fa-seedling"></i>Soil Testing</a>
+  <a href="pest_detect.html"><i class="fa-solid fa-bug"></i>Pest Detection</a>
+  <a href="voice_assist.html"><i class="fa-solid fa-microphone"></i>Voice Assistant</a>
+</nav>
   <p>Enter your soil details to get recommendations.</p>
 
   <form id="soilForm">
