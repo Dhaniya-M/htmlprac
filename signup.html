@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8">
+  <title>Sign Up - Voice Farm Mate</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+     <a href="javascript:history.back()" class="back-btn">⬅ Back</a>
+
+
+  <div class="auth-box">
+    <h2>Sign Up</h2>
+    <form id="signupForm">
+      <input type="email" id="email" placeholder="Email" required><br>
+      <input type="text" id="mobile" placeholder="Mobile Number" required><br>
+      <input type="text" id="username" placeholder="Username" required><br>
+      <input type="password" id="password" placeholder="Password" required><br>
+      <button type="submit">Sign Up</button>
+    </form>
+    <p>Already have an account? <a href="login.html">Login</a></p>
+  </div>
+
+  <script>
+    const form = document.getElementById("signupForm");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const data = {
+        email: document.getElementById("email").value,
+        mobile: document.getElementById("mobile").value,
+        username: document.getElementById("username").value,
+        password: document.getElementById("password").value
+      };
+
+      try {
+        const res = await fetch("http://localhost:5000/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+        if (result.status === "success") {
+          alert("✅ Signup successful! Please verify your email/mobile.");
+          window.location.href = "login.html";
+        } else {
+          alert("❌ " + result.message);
+        }
+      } catch (err) {
+        console.error(err);
+        alert("⚠ Server error!");
+      }
+    });
+  </script>
+</body>
+</html>

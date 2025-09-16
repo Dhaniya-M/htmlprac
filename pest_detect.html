@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ta">
 <head>
+   <link rel="stylesheet" href="style.css">
   <meta charset="UTF-8">
   <title>Pest Detection - Voice Farm Mate</title>
   <style>
@@ -49,7 +50,7 @@
 </head>
 <body>
     
-  <h1>🐛 Pest Detection 🐛</h1>
+  <h1> Pest Detection </h1>
   <nav>
   <a href="index.html"><i class="fa-solid fa-house"></i>Home</a>
   <a href="soil_test.html"><i class="fa-solid fa-seedling"></i>Soil Testing</a>
@@ -62,6 +63,8 @@
     <input type="file" id="cropImage"><br>
     <input type="button" value="Check for Pests" onclick="detectPest()">
   </form>
+  <a href="javascript:history.back()" class="back-btn">⬅ Back</a>
+
 
   <div id="result"></div>
 

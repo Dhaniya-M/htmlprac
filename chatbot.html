@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8">
+  <title>Chatbot - Voice Farm Mate</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4fff4;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    nav {
+      background: #e0ffe0;
+      padding: 10px;
+    }
+    nav a {
+      margin: 0 10px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    nav a i {
+      margin-right: 8px;
+    }
+    nav a i.fa-house { color: #006400; }
+    nav a i.fa-seedling { color: #228B22; }
+    nav a i.fa-bug { color: #FF8C00; }
+    nav a i.fa-microphone { color: #1E90FF; }
+    nav a i.fa-robot { color: #8B008B; }
+
+    .chat-container {
+      width: 400px;
+      margin: 30px auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+      padding: 20px;
+    }
+    .chat-box {
+      height: 300px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 5px;
+      text-align: left;
+      background: #f9fff9;
+    }
+    .message {
+      margin: 5px 0;
+      padding: 8px 12px;
+      border-radius: 15px;
+      max-width: 70%;
+      word-wrap: break-word;
+    }
+    .user-message {
+      background: #d1ffd1;
+      align-self: flex-end;
+      text-align: right;
+      margin-left: auto;
+    }
+    .bot-message {
+      background: #e6e6e6;
+      text-align: left;
+      margin-right: auto;
+    }
+    .chat-input {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+    }
+    .chat-input input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .chat-input button {
+      padding: 10px 20px;
+      background: green;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .chat-input button:hover {
+      background: darkgreen;
+    }
+  </style>
+</head>
+<body>
+  <h1>🤖 Smart Chatbot </h1>
+  <nav>
+    <a href="index.html"><i class="fa-solid fa-house"></i>Home</a>
+     <a href="chatbot.html"><i class="fa-solid fa-robot"></i>Chatbot</a>
+    <a href="pest_detect.html"><i class="fa-solid fa-bug"></i>Pest Detection</a>
+    <a href="voice_assist.html"><i class="fa-solid fa-microphone"></i>Voice Assistant</a>
+    <a href="soil_test.html"><i class="fa-solid fa-seedling"></i>Soil Testing</a>
+  </nav>
+  <a href="javascript:history.back()" class="back-btn">⬅ Back</a>
+
+
+  <div class="chat-container">
+    <div class="chat-box" id="chatBox"></div>
+    <form id="chatForm">
+      <div class="chat-input">
+        <input type="text" id="userInput" placeholder="Type your message..." autocomplete="off">
+        <button type="submit">Send</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const chatForm = document.getElementById("chatForm");
+    const input = document.getElementById("userInput");
+    const chatBox = document.getElementById("chatBox");
+
+    chatForm.addEventListener("submit", function(event) {
+      event.preventDefault();  // Prevent reload
+      const msg = input.value.trim();
+      if (msg === "") return;
+
+      // Add user message
+      const userMsg = document.createElement("div");
+      userMsg.className = "message user-message";
+      userMsg.innerText = msg;
+      chatBox.appendChild(userMsg);
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      // Bot reply (mock)
+      setTimeout(() => {
+        const botMsg = document.createElement("div");
+        botMsg.className = "message bot-message";
+        botMsg.innerText = "நான் இன்னும் கற்றுக்கொண்டு இருக்கிறேன் 🌱. நீங்கள் சொன்னது: " + msg;
+        chatBox.appendChild(botMsg);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }, 800);
+
+      input.value = "";
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+/* General Body */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4fff4;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+/* Navbar */
+nav {
+  background: #e6ffe6;
+  padding: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+nav a {
+  margin: 0 12px;
+  text-decoration: none;
+  font-weight: bold;
+  color: #333;
+}
+nav a:hover {
+  color: green;
+}
+nav a i {
+  margin-right: 6px;
+}
+
+/* Headings */
+h1 {
+  margin-top: 20px;
+  color: #006400;
+}
+
+/* Forms */
+form {
+  margin-top: 30px;
+  background: #ffffff;
+  display: inline-block;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+}
+input[type="text"], input[type="file"], input[type="password"] {
+  padding: 10px;
+  margin: 8px;
+  width: 220px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Buttons */
+input[type="button"], button {
+  padding: 10px 20px;
+  margin-top: 10px;
+  background: green;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+input[type="button"]:hover, button:hover {
+  background: darkgreen;
+}
+
+/* Result / Output Box */
+#result, #output {
+  margin-top: 20px;
+  font-weight: bold;
+  color: #2e8b57;
+  font-size: 16px;
+}
+.back-btn {
+  position: absolute;
+  top: 15px;
+  left: 20px;
+  padding: 8px 16px;
+  background: #228B22;
+  color: white;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+}
+.back-btn:hover {
+  background: #006400;
+}
