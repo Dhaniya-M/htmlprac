@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8">
+  <title>Market Prices</title>
+ <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<script src="{{ url_for('static', filename='script.js') }}" defer></script>
+
+  <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f4fff4; margin: 0; }
+    header { background-color: #0f5e1e; color: white; padding: 20px; text-align: center; }
+    header h1 { margin: 0; font-size: 1.8em; color: white; }
+    .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+    .market-section { background: white; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+    .tab-btn { padding: 10px 20px; background: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+    .tab-btn:hover { background: #45a049; }
+    .tab-btn.active { background: #2E7D32; }
+    .back-btn { display: inline-block; margin: 20px; text-decoration: none; background: #4CAF50; color: white; padding: 8px 15px; border-radius: 5px; }
+    .back-btn:hover { background: #45a049; }
+    .refresh-btn { background: #2196F3; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; margin-left: 10px; }
+    .refresh-btn:hover { background: #1976D2; }
+    .last-updated { font-size: 0.9em; color: #666; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Market Prices & Agricultural Resources</h1>
+  </header>
+
+  <div class="container">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab('prices')">Crop Prices</button>
+      <button class="tab-btn" onclick="showTab('pesticides')">Pesticides & Seeds</button>
+      <button class="refresh-btn" onclick="refreshData()"><i class="fas fa-sync-alt"></i> Refresh</button>
+    </div>
+
+    <div id="prices" class="market-section">
+      <h2>Current Market Prices</h2>
+      <p>Source: Agmarknet (Ministry of Agriculture)</p>
+      
+      <div class="market-filters" style="margin: 20px 0; padding: 15px; background: #f5f5f5; border-radius: 8px;">
+        <select id="stateSelect" style="margin-right: 10px; padding: 8px;">
+          <option value="TN">Tamil Nadu</option>
+          <option value="KA">Karnataka</option>
+          <option value="AP">Andhra Pradesh</option>
+          <option value="KL">Kerala</option>
+        </select>
+        <select id="cropSelect" style="margin-right: 10px; padding: 8px;">
+          <option value="rice">Rice</option>
+          <option value="wheat">Wheat</option>
+          <option value="sugarcane">Sugarcane</option>
+          <option value="cotton">Cotton</option>
+          <option value="pulses">Pulses</option>
+          <option value="millets">Millets</option>
+          <option value="tomato">Tomato</option>
+          <option value="onion">Onion</option>
+          <option value="potato">Potato</option>
+          <option value="maize">Maize</option>
+        </select>
+        <button onclick="fetchPrices()" style="padding: 8px 15px;"><i class="fas fa-search"></i> Get Prices</button>
+      </div>
+
+      <div class="price-table" style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+          <thead>
+            <tr style="background: #e8f5e9;">
+              <th style="padding: 12px; text-align: left;">Market</th>
+              <th style="padding: 12px; text-align: left;">Variety</th>
+              <th style="padding: 12px; text-align: right;">Min Price</th>
+              <th style="padding: 12px; text-align: right;">Max Price</th>
+              <th style="padding: 12px; text-align: right;">Modal Price</th>
+            </tr>
+          </thead>
+          <tbody id="priceData">
+            <!-- Price data will be inserted here -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="last-updated">Last updated: <span id="priceUpdateTime"></span></div>
+    </div>
+
+    <div id="pesticides" class="market-section" style="display: none;">
+      <h2>Agricultural Resources</h2>
+      <!-- Pesticides & Seeds Cards -->
+      <div id="pesticideData">
+        <h3>Common Pesticides & Rates</h3>
+        <div class="resource-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 15px;">
+          <div class="resource-card" style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+            <h4>Neem Oil</h4>
+            <p>₹400-600/L</p>
+            <small>Organic pesticide, safe for most crops</small>
+          </div>
+          <div class="resource-card" style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+            <h4>Copper Sulfate</h4>
+            <p>₹180-220/kg</p>
+            <small>Fungicide for fruit trees</small>
+          </div>
+          <div class="resource-card" style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+            <h4>Bacillus thuringiensis</h4>
+            <p>₹750-900/kg</p>
+            <small>Biological pest control</small>
+          </div>
+        </div>
+
+        <h3 style="margin-top: 30px;">Seed Prices</h3>
+        <div class="resource-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 15px;">
+          <div class="resource-card" style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+            <h4>Paddy (ADT-45)</h4>
+            <p>₹70-80/kg</p>
+            <small>High-yielding variety</small>
+          </div>
+          <div class="resource-card" style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+            <h4>Cotton (MCU-5)</h4>
+            <p>₹850-950/kg</p>
+            <small>Disease resistant variety</small>
+          </div>
+          <div class="resource-card" style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+            <h4>Groundnut (TMV-7)</h4>
+            <p>₹120-150/kg</p>
+            <small>Drought tolerant variety</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="last-updated">Last updated: <span id="resourceUpdateTime"></span></div>
+    </div>
+  </div>
+
+  <a href="{{ url_for('home') }}" class="back-btn">⬅ Back</a>
+
+  <script>
+    function showTab(tabName) {
+      document.querySelectorAll('.market-section').forEach(section => section.style.display = 'none');
+      document.getElementById(tabName).style.display = 'block';
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+    }
+
+    function refreshData() {
+      const now = new Date().toLocaleString();
+      document.getElementById('priceUpdateTime').textContent = now;
+      document.getElementById('resourceUpdateTime').textContent = now;
+    }
+
+    async function fetchPrices() {
+      // Use your JS logic here
+      console.log("Fetching prices...");
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchPrices();
+      refreshData();
+    });
+  </script>
+</body>
+</html>

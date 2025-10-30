@@ -70,6 +70,7 @@ input[type="button"]:hover, button:hover {
   color: #2e8b57;
   font-size: 16px;
 }
+
 .back-btn {
   position: absolute;
   top: 15px;
@@ -81,6 +82,40 @@ input[type="button"]:hover, button:hover {
   text-decoration: none;
   font-weight: bold;
 }
+
 .back-btn:hover {
   background: #006400;
+}
+
+/* Language Selector Styles */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-left: 20px;
+}
+
+#languageSelect {
+  padding: 8px 12px;
+  border-radius: 5px;
+  border: 1px solid #ffffff;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+}
+
+#languageSelect:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+#languageSelect option {
+  background-color: #0f5e1e;
+  color: white;
+}
+
+/* RTL Support for Hindi */
+[lang="hi"] {
+  direction: rtl;
 }

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8">
+  <title>Smart Chatbot</title>
+  <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4fff4;
+      text-align: center;
+      margin: 0;
+    }
+    header {
+      background-color: #0f5e1e;
+      color: white;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+      color: white;
+      font-size: 1.8em;
+      font-weight: bold;
+      width: 800px;
+      text-align: center;
+    }
+    .chat-container {
+      width: 400px;
+      margin: 30px auto;
+      background: #d4edda;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+      padding: 20px;
+    }
+    .chat-box {
+      height: 300px;
+      overflow-y: auto;
+      border: 2px solid #0f5e1e;
+      padding: 10px;
+      border-radius: 10px;
+      text-align: left;
+      background: #f4fff4;
+    }
+    .message { margin: 5px 0; padding: 8px 12px; border-radius: 15px; max-width: 70%; word-wrap: break-word; }
+    .user-message { background: #c3e6cb; text-align: right; margin-left: auto; }
+    .bot-message { background: #e2e3e5; text-align: left; margin-right: auto; }
+    .chat-input { margin-top: 10px; display: flex; gap: 10px; }
+    .chat-input input { flex: 1; padding: 10px; border-radius: 5px; border: 1px solid #ccc; }
+    .chat-input button { padding: 10px 20px; background: green; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    .chat-input button:hover { background: darkgreen; }
+    .back-btn {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      text-decoration: none;
+      background: #4CAF50;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 5px;
+      font-weight: bold;
+      z-index: 1000;
+    }
+    .back-btn:hover {
+      background: #2e8b57;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <a href="{{ url_for('index') }}" class="back-btn">⬅ Back to Home</a>
+
+  <header>
+    <h1>🤖 Smart Chatbot</h1>
+  </header>
+
+  <div class="chat-container">
+    <div class="chat-box" id="chatBox"></div>
+    <form id="chatForm">
+      <div class="chat-input">
+        <input type="text" id="userInput" placeholder="Type your message..." autocomplete="off">
+        <button type="submit">Send</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const chatForm = document.getElementById("chatForm");
+    const input = document.getElementById("userInput");
+    const chatBox = document.getElementById("chatBox");
+
+    // Add welcome message
+    window.addEventListener('DOMContentLoaded', () => {
+      const welcomeMsg = document.createElement("div");
+      welcomeMsg.className = "message bot-message";
+      welcomeMsg.innerHTML = "👋 Hello! I'm your agricultural assistant.<br>Ask me about:<br>🌱 Soil health<br>🐛 Pest control<br>💧 Irrigation<br>🌾 Crop growth";
+      chatBox.appendChild(welcomeMsg);
+    });
+
+    chatForm.addEventListener("submit", async function(event) {
+      event.preventDefault();
+      const msg = input.value.trim();
+      if (!msg) return;
+
+      // Show user message
+      const userMsg = document.createElement("div");
+      userMsg.className = "message user-message";
+      userMsg.innerText = msg;
+      chatBox.appendChild(userMsg);
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      // Typing message
+      const typingMsg = document.createElement("div");
+      typingMsg.className = "message bot-message";
+      typingMsg.innerText = "typing...";
+      chatBox.appendChild(typingMsg);
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      try {
+        const res = await fetch("{{ url_for('agri_chatbot') }}", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ query: msg })
+        });
+        const data = await res.json();
+        chatBox.removeChild(typingMsg);
+
+        const botMsg = document.createElement("div");
+        botMsg.className = "message bot-message";
+        botMsg.innerText = data.reply;
+        chatBox.appendChild(botMsg);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      } catch (err) {
+        chatBox.removeChild(typingMsg);
+        const botMsg = document.createElement("div");
+        botMsg.className = "message bot-message";
+        botMsg.innerHTML = "⚠ Error connecting to backend!";
+        chatBox.appendChild(botMsg);
+      }
+
+      input.value = "";
+    });
+  </script>
+</body>
+</html>

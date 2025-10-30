@@ -1,0 +1,287 @@
+<?php
+session_start();
+// Check if the user is logged in
+if (!isset($_SESSION['user'])) {
+    header("Location: login.php");
+    exit();
+}
+$user = $_SESSION['user'];
+?>
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+  <meta charset="UTF-8">
+  <title>Voice Assistant</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4fff4;
+      text-align: center;
+      margin: 0;
+    }
+
+    header {
+      background-color: #0f5e1e; /* Green background */
+      color: white;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    header h1 {
+      margin: 0;
+      color: white;
+      font-size: 1.8em;
+      font-weight: bold;
+      width: 800px; /* Matches soil page width */
+      text-align: center;
+    }
+
+    nav {
+      margin-top: 20px;
+    }
+
+    nav a {
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+      color: #333;
+    }
+
+    nav a:hover {
+      color: #006400;
+    }
+
+    nav a i {
+      margin-right: 8px;
+    }
+
+    nav a i.fa-house { color: #006400; }      
+    nav a i.fa-seedling { color: #228B22; }  
+    nav a i.fa-bug { color: #FF8C00; }       
+    nav a i.fa-microphone { color: #1E90FF; }
+
+    button {
+      padding: 15px 30px;
+      margin-top: 20px;
+      font-size: 16px;
+      background-color: green;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: darkgreen;
+    }
+
+    #output {
+      margin-top: 30px;
+      font-weight: bold;
+      color: #2e8b57;
+      font-size: 18px;
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-top: 20px;
+      text-decoration: none;
+      background: #4CAF50;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 5px;
+    }
+
+    .back-btn:hover {
+      background: #2e8b57;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+  <h1 data-key="voice.title">🎙 Voice Assistant</h1>
+  </header>
+
+<div class="voice-container" style="max-width: 600px; margin: 20px auto; padding: 20px; background: #fff; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+  <p data-key="voice.description">Speak about crops, soil, or pest and click Start Speaking.</p>
+
+  <div style="margin: 20px 0;">
+    <select id="voiceLanguage" style="padding: 8px; margin-right: 10px; border-radius: 5px; border: 1px solid #ccc;">
+      <option value="en-US">English</option>
+      <option value="ta-IN">Tamil</option>
+      <option value="hi-IN">Hindi</option>
+      <option value="te-IN">Telugu</option>
+      <option value="kn-IN">Kannada</option>
+    </select>
+    <button onclick="startListening()" data-key="voice.start" style="display: inline-block;">🎙 Start Speaking</button>
+  </div>
+
+  <div id="output" style="margin-top: 20px; padding: 15px; background: #f4fff4; border-radius: 8px; min-height: 100px; text-align: left;">
+    Waiting to start...
+  </div>
+</div>
+
+<a href="javascript:history.back()" class="back-btn" data-key="chatbot.back">⬅ Back</a>
+
+
+  <script>
+    let isListening = false;
+    let recognition = null;
+
+    let synthesis = null;
+    let voices = [];
+
+    function loadVoices() {
+      voices = window.speechSynthesis.getVoices();
+    }
+
+    if (window.speechSynthesis) {
+      loadVoices();
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+
+    function speak(text, lang) {
+      if (!window.speechSynthesis) {
+        console.error("Speech synthesis not supported");
+        return;
+      }
+
+      // Cancel any ongoing speech
+      window.speechSynthesis.cancel();
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = lang;
+      
+      // Try to find a voice for the selected language
+      const voice = voices.find(v => v.lang.startsWith(lang.split('-')[0]));
+      if (voice) {
+        utterance.voice = voice;
+      }
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function startListening() {
+      const output = document.getElementById("output");
+      const langSelect = document.getElementById("voiceLanguage");
+      const button = document.querySelector('button[data-key="voice.start"]');
+      
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        output.innerHTML = "⚠ Speech recognition not supported in this browser!";
+        return;
+      }
+
+      if (isListening) {
+        // Stop listening
+        if (recognition) {
+          recognition.stop();
+        }
+        isListening = false;
+        button.innerHTML = "🎙 Start Speaking";
+        button.style.backgroundColor = "green";
+        return;
+      }
+
+      // Start listening
+      recognition = new SpeechRecognition();
+      recognition.lang = langSelect.value;
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      output.innerHTML = "🎙 Listening... Speak now!";
+      button.innerHTML = "⏹ Stop";
+      button.style.backgroundColor = "#dc3545";
+      isListening = true;
+
+      try {
+        recognition.start();
+      } catch (err) {
+        output.innerHTML = "⚠ Error starting recognition: " + err.message;
+        isListening = false;
+        button.innerHTML = "🎙 Start Speaking";
+        button.style.backgroundColor = "green";
+        return;
+      }
+
+      recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        output.innerHTML = `You said: <b>${transcript}</b><br>⏳ Getting answer...`;
+
+        // Check backend connection first
+        fetch("http://localhost:5000")
+          .then(res => {
+            if (!res.ok) throw new Error('Backend not responding');
+            return fetch("http://localhost:5000/agri-chatbot", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ query: transcript })
+            });
+          })
+          .then(res => res.json())
+          .then(data => {
+            const response = data.reply;
+            output.innerHTML += "<br><br>Answer: " + response;
+            // Speak the response
+            speak(response, langSelect.value);
+          })
+          .catch(err => {
+            output.innerHTML += "<br>⚠ Error: " + (err.message || "Backend not connected! Please ensure the server is running.");
+          })
+          .finally(() => {
+            isListening = false;
+            button.innerHTML = "🎙 Start Speaking";
+            button.style.backgroundColor = "green";
+          });
+      };
+
+      recognition.onerror = function(event) {
+        output.innerHTML = "⚠ Mic error: " + event.error;
+        isListening = false;
+        button.innerHTML = "🎙 Start Speaking";
+        button.style.backgroundColor = "green";
+      };
+
+      recognition.onend = function() {
+        if (isListening) {
+          try {
+            recognition.start();
+          } catch (err) {
+            isListening = false;
+            button.innerHTML = "🎙 Start Speaking";
+            button.style.backgroundColor = "green";
+          }
+        }
+      };
+    }
+
+    // Sync voice language with central site language (stored in localStorage)
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedLang = localStorage.getItem("preferredLanguage") || "en";
+      const langMap = {
+        'en': 'en-US',
+        'ta': 'ta-IN',
+        'hi': 'hi-IN',
+        'te': 'te-IN',
+        'kn': 'kn-IN'
+      };
+      const voiceLang = document.getElementById("voiceLanguage");
+      // Apply site language
+      loadLanguage(savedLang);
+      if (voiceLang && langMap[savedLang]) {
+        voiceLang.value = langMap[savedLang];
+      }
+    });
+  </script>
+  
+
+</body>
+</html>

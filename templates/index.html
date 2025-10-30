@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8">
+  <title>Voice Farm Mate</title>
+
+  <!-- CSS and JS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f0fff0;
+    }
+    header {
+      width: 100%;
+      background-color: #0f5e1e;
+      padding: 30px 40px;
+      box-sizing: border-box;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+    .logo {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgb(240, 250, 240);
+      font-size: 2em;
+      font-weight: bold;
+      margin: 0;
+      text-align: center;
+    }
+    .header-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      z-index: 2;
+    }
+    select {
+      padding: 5px 10px;
+      border-radius: 5px;
+      border: none;
+      font-size: 1em;
+      background: #2e8b57;
+      color: white;
+      cursor: pointer;
+    }
+    select:hover { background: #276047; }
+    .btn {
+      background-color: #4caf50;
+      color: white;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    .btn:hover { background-color: #3e8e41; }
+
+    /* Hero Section */
+    .hero {
+      position: relative;
+      height: 650px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: #121010;
+      text-align: center;
+    }
+    .hero img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      z-index: 0;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+    .hero-content h2 {
+      color: #ffffff;
+      font-size: 3em;
+      margin: 0;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.7);
+    }
+    .hero-content p {
+      color: #ffffff;
+      font-size: 1.5em;
+      margin-top: 10px;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+    }
+    .cta-btn {
+      margin-top: 20px;
+      padding: 12px 30px;
+      background: #4caf50;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 1.2em;
+      display: inline-block;
+    }
+    .cta-btn:hover { background: #3e8e41; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 class="logo">Voice Farm Mate</h1>
+    <div class="header-right">
+      <select id="languageSelect">
+        <option value="en">English</option>
+        <option value="ta">தமிழ்</option>
+        <option value="hi">हिन्दी</option>
+        <option value="te">తెలుగు</option>
+        <option value="kn">ಕನ್ನಡ</option>
+        <option value="ma">മലയാളം</option>
+      </select>
+      <a href="{{ url_for('login_page') }}" class="btn">Login</a>
+      <a href="{{ url_for('signup_page') }}" class="btn">Signup</a>
+    </div>
+  </header>
+
+  <div class="hero">
+    <img src="{{ url_for('static', filename='look3.jpg') }}" alt="Farm background">
+    <div class="hero-content">
+      <h2>Welcome to Voice Farm Mate</h2>
+      <p>Empowering farmers with smart technology!</p>
+      <a href="{{ url_for('login_page') }}" class="cta-btn">Get Started</a>
+    </div>
+  </div>
+</body>
+</html>

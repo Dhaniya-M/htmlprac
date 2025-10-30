@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+    <meta charset="UTF-8">
+    <title>Pest Detection</title>
+   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<script src="{{ url_for('static', filename='script.js') }}" defer></script>
+
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4fff4; text-align: center; margin: 0; }
+        header { background-color: #0f5e1e; color: white; padding: 20px; text-align: center; }
+        header h1 { margin: 0; font-size: 1.8em; font-weight: bold; width: 800px; text-align: center; }
+        form { margin-top: 30px; background: #ffffff; display: inline-block; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0,0,0,0.2); }
+        input[type="file"] { margin: 10px 0; }
+        input[type="button"], button { padding: 10px 20px; margin-top: 10px; background: green; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        input[type="button"]:hover, button:hover { background-color: darkgreen; }
+        #result { margin-top: 20px; font-weight: bold; color: #2e8b57; }
+        .back-btn { display: inline-block; margin-top: 20px; text-decoration: none; background: #4CAF50; color: white; padding: 8px 15px; border-radius: 5px; }
+        .back-btn:hover { background: #2e8b57; text-decoration: underline; }
+        video, canvas { border:1px solid #ccc; margin-top: 10px; display:none; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🪲 Pest Detection</h1>
+</header>
+
+<p>Upload a crop image to check for pests.</p>
+
+<div>
+    <video id="cameraStream" width="320" height="240" autoplay></video>
+    <canvas id="captureCanvas" width="320" height="240"></canvas>
+</div>
+
+<form id="pestForm">
+    <input type="file" id="cropImage" accept="image/*"><br>
+    <div style="margin-top:10px;">
+        <button type="button" id="openCameraBtn">📷 Take Photo</button>
+        <button type="button" id="captureBtn" style="display:none;">📸 Capture</button>
+        <button type="button" id="stopCameraBtn" style="display:none;">✖ Stop</button>
+        <input type="button" value="Check for Pests" onclick="submitPest()">
+    </div>
+</form>
+
+<a href="{{ url_for('home') }}" class="back-btn">⬅ Back</a>
+
+<div id="result"></div>
+
+<script>
+// Camera and capture flow
+const openCameraBtn = document.getElementById('openCameraBtn');
+const captureBtn = document.getElementById('captureBtn');
+const stopCameraBtn = document.getElementById('stopCameraBtn');
+const video = document.getElementById('cameraStream');
+const canvas = document.getElementById('captureCanvas');
+const fileInput = document.getElementById('cropImage');
+const result = document.getElementById('result');
+let stream = null;
+
+openCameraBtn.addEventListener('click', async () => {
+    try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+        video.style.display = 'block';
+        captureBtn.style.display = 'inline-block';
+        stopCameraBtn.style.display = 'inline-block';
+        openCameraBtn.style.display = 'none';
+    } catch (err) { alert('Could not access camera: ' + err.message); }
+});
+
+captureBtn.addEventListener('click', () => {
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    canvas.style.display = 'block';
+    canvas.toBlob(blob => {
+        const file = new File([blob], 'capture.png', { type: 'image/png' });
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        fileInput.files = dataTransfer.files;
+    }, 'image/png');
+});
+
+stopCameraBtn.addEventListener('click', () => {
+    if (stream) stream.getTracks().forEach(t => t.stop());
+    stream = null;
+    video.style.display = 'none';
+    captureBtn.style.display = 'none';
+    stopCameraBtn.style.display = 'none';
+    openCameraBtn.style.display = 'inline-block';
+});
+
+async function submitPest() {
+    result.innerHTML = '';
+    if (fileInput.files.length === 0) {
+        result.innerHTML = '⚠ Please upload or capture an image first!';
+        return;
+    }
+
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+    reader.onload = async function(e) {
+        const base64 = e.target.result.split(',')[1];
+        try {
+            const res = await fetch('{{ url_for("pest_detect") }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ image: base64 })
+            });
+            const data = await res.json();
+            result.innerHTML = data.result || '⚠ No result from server.';
+        } catch (err) {
+            console.error(err);
+            result.innerHTML = '⚠ Error sending image to server: ' + err.message;
+        }
+    };
+    reader.readAsDataURL(file);
+}
+</script>
+
+</body>
+</html>

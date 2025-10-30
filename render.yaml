@@ -1,0 +1,8 @@
+# Placeholder render.yaml for Render.com - customize environment and services as needed
+services:
+  - type: web
+    name: htmlprac-flask-backend
+    env: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn app:create_app()"

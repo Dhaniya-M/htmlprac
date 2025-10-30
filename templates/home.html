@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<script src="{{ url_for('static', filename='script.js') }}" defer></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0fff0;
+            margin: 0;
+        }
+        header {
+            background-color: #0f5e1e;
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        header .top-row {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .settings-menu { position: relative; display: inline-block; }
+        .settings-btn { background: none; border: none; color: white; cursor: pointer; font-size: 1.2em; padding: 8px; }
+        .settings-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 5px;
+        }
+        .settings-content a { color: black; padding: 12px 16px; text-decoration: none; display: block; }
+        .settings-content a:hover { background-color: #e8f5e9; }
+        .settings-menu:hover .settings-content { display: block; }
+        header h1 { margin: 0; font-size: 1.8em; color: white; }
+        header a.logout-btn {
+            background: #228B22; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none;
+        }
+        header a.logout-btn:hover { background: #084608ff; }
+        .welcome-text { color: white; font-size: 1.3em; font-weight: bold; margin-top: 15px; }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+        .grid-item {
+            background-color: #4caf50;
+            color: white;
+            border-radius: 12px;
+            padding: 50px 20px;
+            text-align: center;
+            font-size: 1.5em;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .grid-item i { font-size: 2em; margin-bottom: 15px; display: block; }
+        .grid-item:hover { background-color: #3e8e41; }
+        @media (max-width: 600px) { .grid-container { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="top-row">
+            <h1>Voice Farm Mate</h1>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <a href="{{ url_for('auth.logout') }}" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </div>
+        <div class="welcome-text">
+            Welcome, {{ user }}! Choose a service to get started
+        </div>
+    </header>
+
+    <div class="grid-container">
+        <a href="{{ url_for('soil.soil_page') }}" class="grid-item">
+            <i class="fa-solid fa-seedling"></i> Soil Testing
+        </a>
+        <a href="{{ url_for('pest.pest_page') }}" class="grid-item">
+            <i class="fa-solid fa-bug"></i> Pest Detection
+        </a>
+        <a href="{{ url_for('voice.voice_page') }}" class="grid-item">
+            <i class="fa-solid fa-microphone"></i> Voice Assistant
+        </a>
+        <a href="{{ url_for('chatbot.chatbot_page') }}" class="grid-item">
+            <i class="fa-solid fa-robot"></i> Chatbot
+        </a>
+        <a href="{{ url_for('market.market_page') }}" class="grid-item">
+            <i class="fa-solid fa-shop"></i> Market Prices & Resources
+        </a>
+        <a href="{{ url_for('weather.weather_page') }}" class="grid-item">
+            <i class="fa-solid fa-cloud-sun"></i> Weather Information
+        </a>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

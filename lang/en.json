@@ -1,0 +1,120 @@
+{
+  "lang": {
+    "english": "English",
+    "tamil": "தமிழ்",
+    "hindi": "हिन्दी",
+    "telugu": "తెలుగు",
+    "kannada": "ಕನ್ನಡ"
+  },
+  "index": {
+    "title": "Voice Farm Mate",
+    "welcome": "Empowering farmers with smart technology!",
+    "cta": "Get Started",
+    "login": "Login",
+    "signup": "Signup"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "notifications": "Notifications",
+    "weather_alerts": "Weather Alerts",
+    "market_alerts": "Market Price Alerts",
+    "save": "Save Changes"
+  },
+  "market": {
+    "title": "Market Prices & Agricultural Resources",
+    "prices_tab": "Crop Prices",
+    "pesticides_tab": "Pesticides & Seeds",
+    "current_prices": "Current Market Prices",
+    "prices_source": "Source: Agmarknet (Ministry of Agriculture)",
+    "resources": "Agricultural Resources",
+    "pesticides": "Common Pesticides & Rates",
+    "seeds": "Seed Prices",
+    "refresh": "Refresh",
+    "market": "Market",
+    "variety": "Variety",
+    "min_price": "Min Price",
+    "max_price": "Max Price",
+    "modal_price": "Modal Price",
+    "fetch_prices": "Get Prices",
+    "back": "Back",
+    "state_tn": "Tamil Nadu",
+    "state_ka": "Karnataka",
+    "state_ap": "Andhra Pradesh",
+    "state_kl": "Kerala",
+    "crop_rice": "Rice",
+    "crop_wheat": "Wheat",
+    "crop_sugarcane": "Sugarcane",
+    "crop_cotton": "Cotton",
+    "crop_pulses": "Pulses",
+    "crop_millets": "Millets",
+    "crop_tomato": "Tomato",
+    "crop_onion": "Onion",
+    "crop_potato": "Potato",
+    "crop_maize": "Maize"
+  },
+  "weather": {
+    "title": "Weather Information",
+    "current": "Current Weather",
+    "forecast": "Weather Forecast",
+    "temperature": "Temperature",
+    "humidity": "Humidity",
+    "wind": "Wind Speed",
+    "source": "Source: India Meteorological Department (IMD)",
+    "refresh": "Refresh",
+    "back": "Back",
+    "alert_high_temp": "High temperature alert",
+    "alert_humidity": "High humidity alert",
+    "alert_wind": "Strong winds alert"
+  },
+  "home": {
+    "title": "Home ",
+    "welcome": "Welcome, {user}! Choose a service to get started",
+    "soil": "Soil Testing",
+    "pest": "Pest Detection",
+    "voice": "Voice Assistant",
+    "chatbot": "Chatbot",
+    "logout": "Logout"
+  },
+  "login": {
+    "title": "Login",
+    "email": "Email",
+    "password": "Password",
+    "login_btn": "Login",
+    "no_account": "Don't have an account?",
+    "signup": "Signup here"
+  },
+  "signup": {
+    "title": "Signup ",
+    "name": "Full Name",
+    "email": "Email",
+    "mobile": "Mobile Number",
+    "password": "Password",
+    "signup_btn": "Signup",
+    "have_account": "Already have an account?",
+    "login": "Login here"
+  },
+  "chatbot": {
+    "title": "Chatbot ",
+    "placeholder": "Type your message...",
+    "send_btn": "Send",
+    "back": "Back",
+    "not_connected": "⚠ Backend not connected!"
+  },
+  "soil": {
+    "title": "Soil Test ",
+    "description": "Analyze your soil for better crop growth",
+    "submit": "Submit"
+  },
+  "pest": {
+    "title": "Pest Detection ",
+    "description": "Detect pests in your crops",
+    "submit": "Submit"
+  },
+  "voice": {
+    "title": "Voice Assistant",
+    "description": "Ask farming queries via voice",
+    "start": "Start Listening",
+    "stop": "Stop Listening"
+  }
+}
